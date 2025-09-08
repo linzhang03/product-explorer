@@ -1,0 +1,22 @@
+[
+{ "id": 1, "name": "Alpha Chair", "category": "Furniture", "price": 149.99, "stock": 12 },
+{ "id": 2, "name": "Bravo Lamp", "category": "Lighting", "price": 39.50, "stock": 0 },
+{ "id": 3, "name": "Charlie Desk", "category": "Furniture", "price": 329.00, "stock": 5 },
+{ "id": 4, "name": "Delta Bulb", "category": "Lighting", "price": 9.99, "stock": 300 },
+{ "id": 5, "name": "Echo Shelf", "category": "Storage", "price": 89.90, "stock": 23 },
+{ "id": 6, "name": "Foxtrot Sofa", "category": "Furniture", "price": 699.00, "stock": 2 },
+{ "id": 7, "name": "Golf Table", "category": "Furniture", "price": 249.49, "stock": 0 },
+{ "id": 8, "name": "Hotel Drawer", "category": "Storage", "price": 119.00, "stock": 11 },
+{ "id": 9, "name": "India Pendant", "category": "Lighting", "price": 69.00, "stock": 14 },
+{ "id": 10, "name": "Juliet Rack", "category": "Storage", "price": 59.99, "stock": 0 },
+{ "id": 11, "name": "Kilo Nightstand", "category": "Furniture", "price": 129.00, "stock": 9 },
+{ "id": 12, "name": "Lima Floor Lamp", "category": "Lighting", "price": 49.99, "stock": 18 },
+{ "id": 13, "name": "Mike Bookcase", "category": "Storage", "price": 159.00, "stock": 4 },
+{ "id": 14, "name": "November Stool", "category": "Furniture", "price": 39.99, "stock": 25 },
+{ "id": 15, "name": "Oscar Sconce", "category": "Lighting", "price": 24.99, "stock": 44 },
+{ "id": 16, "name": "Papa Wardrobe", "category": "Storage", "price": 499.00, "stock": 1 },
+{ "id": 17, "name": "Quebec Bench", "category": "Furniture", "price": 179.00, "stock": 7 },
+{ "id": 18, "name": "Romeo Spotlight", "category": "Lighting", "price": 34.99, "stock": 0 },
+{ "id": 19, "name": "Sierra Box", "category": "Storage", "price": 14.50, "stock": 120 },
+{ "id": 20, "name": "Tango Cabinet", "category": "Storage", "price": 289.00, "stock": 3 }
+]

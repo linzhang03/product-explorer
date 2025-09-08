@@ -1,0 +1,17 @@
+<div class="container" *ngIf="loaded()">
+<a routerLink="/products">← Back</a>
+<h2 style="margin-top:8px">{{product()?.name}}</h2>
+<div class="row"><span class="badge">{{product()?.category}}</span><span class="spacer"></span><strong>#{{product()?.id}}</strong></div>
+<p style="font-size:18px;margin:8px 0">$ {{product()?.price | number:'1.2-2'}}</p>
+<p>{{ product()?.stock ? (product()?.stock + ' in stock') : 'Out of stock' }}</p>
+
+
+<h3 style="margin-top:24px">Related</h3>
+<div class="grid">
+<a class="card" *ngFor="let p of related()" [routerLink]="['/products', p.id]">
+<strong>{{p.name}}</strong>
+<div class="row"><span class="badge">{{p.category}}</span><span class="spacer"></span>#{{p.id}}</div>
+</a>
+</div>
+</div>
+<div class="container" *ngIf="!loaded()">Loading…</div>

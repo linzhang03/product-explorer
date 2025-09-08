@@ -1,0 +1,20 @@
+<div class="container">
+<h1>Product Explorer</h1>
+<app-product-filters [categories]="categories()" (changed)="onFilterChanged($event)"></app-product-filters>
+
+
+@if (loading()) {<div>Loading…</div>}
+@if (error()) {<div style="color:#b91c1c">{{error()}}</div>}
+
+
+<app-product-list [items]="items()"></app-product-list>
+
+
+<div class="row" style="margin-top:16px" *ngIf="total() > pageSize()">
+<button (click)="prevPage()" [disabled]="page()===1">Prev</button>
+<span class="spacer"></span>
+<span>Page {{page()}} / {{ totalPages() }}</span>
+<span class="spacer"></span>
+<button (click)="nextPage()" [disabled]="page()===totalPages()">Next</button>
+</div>
+</div>

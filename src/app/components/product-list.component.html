@@ -1,0 +1,17 @@
+<div class="grid">
+@for (p of items; track trackById(i, p); let i = $index) {
+    <a class="card" [routerLink]="['/products', p.id]">
+    <div class="row">
+    <strong>#{{p.id}}</strong>
+    <span class="spacer"></span>
+    <span class="badge">{{p.category}}</span>
+    </div>
+    <h3 style="margin:8px 0 4px">{{p.name}}</h3>
+    <div class="row">
+    <span>$ {{p.price | number:'1.2-2'}}</span>
+    <span class="spacer"></span>
+    <span [class]="p.stock>0 ? 'badge' : ''">{{ p.stock>0 ? (p.stock + ' in stock') : 'Out of stock' }}</span>
+    </div>
+    </a>
+}
+</div>

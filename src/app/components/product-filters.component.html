@@ -1,0 +1,32 @@
+<div class="toolbar">
+<input placeholder="Search name/category" [value]="q()" (input)="q.set($any($event.target).value)" />
+
+
+<select multiple (change)="onCategoriesChange($event)">
+<option *ngFor="let c of categories" [value]="c" [selected]="selectedCategories().includes(c)">{{c}}</option>
+</select>
+
+
+<select [value]="sort()" (change)="onSortChange($event)">
+<option value="id">Sort: ID</option>
+<option value="name">Sort: Name</option>
+<option value="price">Sort: Price</option>
+</select>
+
+
+<select [value]="order()" (change)="onOrderChange($event)">
+<option value="asc">Asc</option>
+<option value="desc">Desc</option>
+</select>
+
+
+<select [value]="inStock()" (change)="onInStockChange($event)">
+<option value="any">Any Stock</option>
+<option value="true">In Stock</option>
+<option value="false">Out of Stock</option>
+</select>
+
+
+<div class="spacer"></div>
+<span class="badge">Page {{page()}}</span>
+</div>
