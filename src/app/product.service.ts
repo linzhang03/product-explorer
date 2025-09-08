@@ -10,7 +10,6 @@ export class ProductService {
     private http = inject(HttpClient);
     private base = environment.apiUrl;
 
-
     list(opts: {
     q?: string; categories?: string[]; inStock?: boolean | null;
     sort?: 'price' | 'name' | 'id'; order?: 'asc' | 'desc';
@@ -27,11 +26,9 @@ export class ProductService {
         return this.http.get<Paged<Product>>(`${this.base}/products`, { params });
     }
 
-
     categories(): Observable<string[]> {
       return this.http.get<string[]>(`${this.base}/categories`);
     }
-
 
     detail(id: number): Observable<ProductWithRelated> {
       return this.http.get<ProductWithRelated>(`${this.base}/products/${id}`);

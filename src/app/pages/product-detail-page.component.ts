@@ -12,20 +12,20 @@ import { ProductService } from '../product.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProductDetailPageComponent {
-private route = inject(ActivatedRoute);
-private api = inject(ProductService);
+    private route = inject(ActivatedRoute);
+    private api = inject(ProductService);
 
 
-product = signal<any | null>(null);
-related = signal<any[]>([]);
-loaded = signal(false);
+    product = signal<any | null>(null);
+    related = signal<any[]>([]);
+    loaded = signal(false);
 
 
-ngOnInit(){
-const id = Number(this.route.snapshot.paramMap.get('id'));
-this.api.detail(id).subscribe({
-next: (res) => { this.product.set(res.product); this.related.set(res.related); this.loaded.set(true); },
-error: () => { this.loaded.set(true); }
-});
-}
+    ngOnInit(){
+        const id = Number(this.route.snapshot.paramMap.get('id'));
+        this.api.detail(id).subscribe({
+        next: (res) => { this.product.set(res.product); this.related.set(res.related); this.loaded.set(true); },
+        error: () => { this.loaded.set(true); }
+        });
+    }
 }
