@@ -1,10 +1,11 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal } from '@angular/core';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { catchError, debounceTime, distinctUntilChanged, map, of, Subject, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, finalize, map, of, pairwise, startWith, Subject, switchMap, tap } from 'rxjs';
 import { ProductFiltersComponent } from '../components/product-filters.component';
 import { ProductListComponent } from '../components/product-list.component';
 import { ProductService } from '../product.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class ProductsPageComponent {
     private api = inject(ProductService);
     private router = inject(Router);
     private route = inject(ActivatedRoute);
+    private destroyRef = inject(DestroyRef);
 
 
     // Signals for view state
@@ -58,13 +60,18 @@ export class ProductsPageComponent {
     // Debounce + cancel in-flight requests
     this.filter$
     .pipe(
-        tap(value=>console.log("filter is change: " + value)),
+        tap(value=>console.log("filter is change: " + JSON.stringify(value))),
         debounceTime(300),
         distinctUntilChanged((a, b) => JSON.stringify(a) === JSON.stringify(b)),
-        switchMap(filters => {
+        startWith({category: null, sort: null}),
+        pairwise(),
+        switchMap(([prev, filters]) => {
+        //console.log(" prev: " + JSON.parse(prev));
         this.loading.set(true);
         this.error.set(null);
         // persist to URL
+        const reloaded = this.sortedItems(prev, filters);
+        console.log("is reloading: " + reloaded);
         this.router.navigate([], { queryParams: this.toQueryParams(filters), queryParamsHandling: '' });
         return this.api.list({ ...filters, page: this.page(), pageSize: this.pageSize() })
         .pipe(
@@ -72,11 +79,13 @@ export class ProductsPageComponent {
             catchError(err => {
             this.error.set('Failed to load products');
             return of({ total: 0, page: 1, pageSize: this.pageSize(), items: [] });
-            })
+            }),
+            finalize(()=>this.loading.set(false))
         );
-        })
-    )
-    .subscribe(res => {
+
+        }),
+        takeUntilDestroyed(this.destroyRef)
+    ).subscribe(res => {
         this.items.set(res.items);
         this.total.set(res.total);
         this.loading.set(false);
@@ -94,21 +103,18 @@ export class ProductsPageComponent {
         return qp;
     }
 
-
     onFilterChanged(f: any){
         console.log("f is changed: " + f);
         this.page.set(1); // reset page on filter change
         this.filter$.next(f);
     }
-
-
+ 
     nextPage(){
-    if (this.page() < this.totalPages()){
-    this.page.update(x => x + 1);
-    this.filter$.next(this.routeToFilter());
+        if (this.page() < this.totalPages()){
+        this.page.update(x => x + 1);
+        this.filter$.next(this.routeToFilter());
+        }
     }
-    }
-
 
     prevPage(){
         if (this.page() > 1){
@@ -117,11 +123,9 @@ export class ProductsPageComponent {
         }
     }
 
-
     totalPages(){
         return Math.max(1, Math.ceil(this.total() / this.pageSize()));
     }
-
 
     private routeToFilter(){
         const qp = this.route.snapshot.queryParamMap;
@@ -132,5 +136,15 @@ export class ProductsPageComponent {
         sort: (qp.get('sort') as any) ?? 'id',
         order: (qp.get('order') as any) ?? 'asc'
         };
+    }
+
+
+    sortedItems(prev : any, filters : any) : boolean{
+        if(prev.q === filters.q && prev.categories === filters.categories 
+          && prev.inStock === filters.inStock && prev.page === filters.page){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

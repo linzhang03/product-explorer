@@ -25,6 +25,17 @@ function loadProducts() {
 	}
 }
 
+function writeProducts(list) {
+	fs.writeFileSync(DATA_PATH, JSON.stringify(list, null, 2));
+}
+function nextId(list) {
+	return list.length ? Math.max(...list.map(p => p.id)) + 1 : 1;
+}
+function skuLookup(list, sku) {
+	const key = String(sku || '').trim().toLowerCase();
+	return list.find(p => (p.sku || '').toLowerCase() === key);
+}
+
 // Simple health check
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
@@ -33,6 +44,15 @@ app.get('/categories', (req, res) => {
 	const items = loadProducts();
 	const categories = [...new Set(items.map(p => p.category))].sort();
 	res.json(categories);
+});
+
+// --- SKU existence
+// GET /sku/exists?sku=SKU-123
+app.get('/sku/exists', (req, res) => {
+	const { sku } = req.query;
+	const items = loadProducts();
+	const found = skuLookup(items, sku);
+	res.json(found ? { exists: true, id: found.id } : { exists: false });
 });
 
 // GET /products (search/filter/sort/paginate)
@@ -98,6 +118,46 @@ app.get('/products/:id', (req, res) => {
 	if (!found) return res.status(404).json({ message: 'Not found' });
 	const related = items.filter(p => p.category === found.category && p.id !== found.id).slice(0, 6);
 	res.json({ product: found, related });
+});
+
+// --- Update product
+app.put('/products/:id', (req, res) => {
+	const id = Number(req.params.id);
+	const payload = req.body || {};
+	const list = loadProducts();
+	const idx = list.findIndex(p => p.id === id);
+	if (idx === -1) return res.status(404).json({ message: 'Not found' });
+
+
+	if (payload.sku) {
+		const dupe = skuLookup(list, payload.sku);
+		if (dupe && dupe.id !== id) {
+		return res.status(409).json({ message: 'SKU already exists', id: dupe.id });
+		}
+	}
+
+	const existing = list[idx];
+	const updated = {
+		...existing,
+		name: payload.name ?? existing.name,
+		category: payload.category ?? existing.category,
+		price: payload.price != null ? Number(payload.price) : existing.price,
+		stock: payload.inStock != null
+		? (payload.inStock ? Math.max(1, Number(payload.stock ?? existing.stock ?? 1)) : 0)
+		: (payload.stock != null ? Number(payload.stock) : existing.stock),
+		sku: payload.sku ?? existing.sku,
+		tags: Array.isArray(payload.tags) ? payload.tags.filter(Boolean) : (existing.tags || []),
+		};
+		if ((updated.category === 'Lighting') && (payload.lumens != null)) {
+		updated.lumens = Number(payload.lumens);
+		}
+		if (updated.category !== 'Lighting') {
+		delete updated.lumens;
+	}
+
+	list[idx] = updated;
+	writeProducts(list);
+	res.json(updated);
 });
 
 app.listen(PORT, () => console.log(`API listening on http://localhost:${PORT}`));

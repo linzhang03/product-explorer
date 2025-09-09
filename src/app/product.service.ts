@@ -33,4 +33,17 @@ export class ProductService {
     detail(id: number): Observable<ProductWithRelated> {
       return this.http.get<ProductWithRelated>(`${this.base}/products/${id}`);
     }
+
+    skuExists(sku: string): Observable<{exists: boolean; id?: number}> {
+        const params = new HttpParams().set('sku', sku || '');
+        return this.http.get<{exists: boolean; id?: number}>(`${this.base}/sku/exists`, { params });
+    }
+
+    create(product: Partial<Product> & { sku: string }): Observable<Product> {
+        return this.http.post<Product>(`${this.base}/products`, product);
+    }
+
+    update(id: number, product: Partial<Product>): Observable<Product> {
+        return this.http.put<Product>(`${this.base}/products/${id}`, product);
+    }
 }
