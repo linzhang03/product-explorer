@@ -1,0 +1,81 @@
+<div class="container">
+<div class="page-header">
+<h1>{{ isEdit() ? 'Edit Product' : 'Create Product' }}</h1>
+<span class="subtle">Reactive Form • Dynamic Fields • Async SKU Validation</span>
+</div>
+
+
+<form [formGroup]="form" (ngSubmit)="save()" style="display:grid; gap:12px; max-width:720px;">
+<div class="card" style="padding:16px; display:grid; gap:12px;">
+<label>
+<div>Name</div>
+<input formControlName="name" placeholder="Product name" />
+<small *ngIf="fc('name').touched && fc('name').invalid" style="color:#b91c1c">
+Name is required (min 3).
+</small>
+</label>
+
+<label>
+<div>Category</div>
+<select formControlName="category">
+<option value="">— Choose —</option>
+    @for(c of categories(); track c) {<option [value]="c">{{c}}
+</option>}
+</select>
+@if(fc('category').touched && fc('category').invalid) {<small style="color:#b91c1c">Category is required.</small>}
+</label>
+
+
+<label *ngIf="form.value.category === 'Lighting'">
+<div>Lumens</div>
+<input type="number" formControlName="lumens" placeholder="e.g., 600" />
+<small *ngIf="fc('lumens').touched && fc('lumens').invalid" style="color:#b91c1c">Lumens required &gt; 0.</small>
+</label>
+
+
+<div class="row" style="gap:12px;">
+<label style="flex:1">
+<div>Price</div>
+<input type="number" step="0.01" formControlName="price" placeholder="0.00" />
+<small *ngIf="fc('price').touched && fc('price').invalid" style="color:#b91c1c">Price &gt; 0 required.</small>
+</label>
+<label class="row" style="gap:8px; align-items:center; margin-top:20px;">
+<input type="checkbox" formControlName="inStock" /> <span>In Stock</span>
+</label>
+</div>
+
+<label>
+<div>SKU</div>
+<input formControlName="sku" placeholder="Unique SKU" />
+@if (fc('sku').pending) {<small>Checking…</small>}
+@if (fc('sku').touched && fc('sku').hasError('required')) {<small style="color:#b91c1c">SKU is required.</small>}
+@if (fc('sku').touched && fc('sku').hasError('skuTaken')) {<small style="color:#b91c1c">SKU is already taken.</small>}
+</label>
+
+
+<div>
+<div class="row" style="justify-content:space-between; align-items:center;">
+<strong>Tags</strong>
+<button type="button" class="btn" (click)="addTag()">+ Add Tag</button>
+</div>
+<div style="display:grid; gap:8px; margin-top:8px;">
+    @for(ctrl of tags.controls; track ctrl.getRawValue(); let i= $index) 
+    {
+        <div class="row" style="gap:8px;">
+        <input [formControl]="ctrl" placeholder="tag" style="flex:1" />
+        <button type="button" class="btn" (click)="removeTag(i)">Remove</button>
+        </div>
+    }
+</div>
+</div>
+</div>
+
+
+<div class="row" style="gap:12px;">
+<button class="btn primary" type="submit" [disabled]="form.invalid || form.pending || saving()">{{ isEdit() ? 'Update' : 'Create' }}</button>
+<a class="btn" [routerLink]="['/products']">Cancel</a>
+<span class="spacer"></span>
+<span *ngIf="message()" class="subtle">{{message()}}</span>
+</div>
+</form>
+</div>

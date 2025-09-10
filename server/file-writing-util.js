@@ -1,5 +1,6 @@
 import {promises as fs} from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 // Resolve __dirname in ES module context
 const __filename = fileURLToPath(import.meta.url);
@@ -18,7 +19,7 @@ let queue = Promise.resolve();
 let pendingData = null;
 let flushing = false;
 
-export function writeProducts(list) {
+export async function writeProducts(list) {
   // stringify once (JSON.stringify can be the slow part for big files)
   pendingData = JSON.stringify(list, null, 2);
 

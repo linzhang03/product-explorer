@@ -1,0 +1,10 @@
+.cart-widget {
+      position: fixed; right: 16px; bottom: 16px; width: 260px;
+      background: var(--surface); border:1px solid var(--border);
+      border-radius: var(--radius); padding:12px; box-shadow: var(--shadow);
+    }
+.dev { margin-top: 8px; display:flex; gap:8px; align-items:center; }
+.row { display:flex; align-items:center; }
+.spacer { flex:1; }
+.badge { display:inline-block; padding:2px 8px; border-radius:999px; background:#eef2ff; color:#3730a3; font-size:12px; border:1px solid rgba(55,48,163,.15); }
+  

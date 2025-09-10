@@ -4,7 +4,9 @@
 <div class="row"><span class="badge">{{product()?.category}}</span><span class="spacer"></span><strong>#{{product()?.id}}</strong></div>
 <p style="font-size:18px;margin:8px 0">$ {{product()?.price | number:'1.2-2'}}</p>
 <p>{{ product()?.stock ? (product()?.stock + ' in stock') : 'Out of stock' }}</p>
-
+<button class="btn primary" (click)="add()" [disabled]="(product()?.stock||0)===0">
+  Add to cart
+</button>
 
 <h3 style="margin-top:24px">Related</h3>
 <div class="grid">

@@ -46,4 +46,22 @@ export class ProductService {
     update(id: number, product: Partial<Product>): Observable<Product> {
         return this.http.put<Product>(`${this.base}/products/${id}`, product);
     }
+
+    // ----- Cart API -----
+    cartGet() { 
+      return this.http.get<{items: any[]; count: number; total: number}>(`${this.base}/cart`); 
+    }
+
+    cartAdd(productId: number, qty = 1) { 
+      return this.http.post<{items:any[];count:number;total:number}>(`${this.base}/cart`, { productId, qty }); 
+    }
+
+    cartRemove(productId: number, qty?: number) {
+      let params = new HttpParams();
+      if (qty && qty > 0) params = params.set('qty', String(qty));
+      return this.http.delete<{items:any[];count:number;total:number}>(`${this.base}/cart/${productId}`, { params });
+    }
+    cartSetFailureRate(rate: number) { 
+      return this.http.post<{rate:number}>(`${this.base}/cart/failure-rate`, { rate }); 
+    }
 }
