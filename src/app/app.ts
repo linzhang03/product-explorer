@@ -6,7 +6,8 @@ import { ToastContainerComponent } from "./components/toast-container.component"
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, CartWidgetComponent, ToastContainerComponent],
-  template: `<router-outlet />
+  template: `<h1>Hello, product-explorer</h1>
+    <router-outlet />
     <app-cart-widget></app-cart-widget>
     <app-toast-container></app-toast-container>`,
   standalone: true,

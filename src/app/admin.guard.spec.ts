@@ -1,9 +1,11 @@
 import { TestBed } from '@angular/core/testing';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AdminGuard } from './admin.guard';
 import { AuthService } from './auth.service';
 
 
+@Injectable()
 class MockAuth extends AuthService { override isAdmin() { return this._val; } private _val=false; set(v:boolean){(this as any)._val=v;} }
 
 

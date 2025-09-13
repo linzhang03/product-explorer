@@ -75,7 +75,7 @@ Name is required (min 3).
 <button class="btn primary" type="submit" [disabled]="form.invalid || form.pending || saving()">{{ isEdit() ? 'Update' : 'Create' }}</button>
 <a class="btn" [routerLink]="['/products']">Cancel</a>
 <span class="spacer"></span>
-<span *ngIf="message()" class="subtle">{{message()}}</span>
+    @if(message()){<span class="subtle">{{message()}}</span>}
 </div>
 </form>
 </div>
