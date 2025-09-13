@@ -1,6 +1,7 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withPreloading } from '@angular/router';
+import { SelectivePreloadingStrategy } from './selective-preloading.strategy';
 
 import { routes } from './app.routes';
 
@@ -9,6 +10,6 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(withInterceptorsFromDi()),
-    provideRouter(routes)
+    provideRouter(routes, withPreloading(SelectivePreloadingStrategy))
   ]
 };

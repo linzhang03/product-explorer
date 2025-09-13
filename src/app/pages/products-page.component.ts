@@ -1,7 +1,7 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, inject, signal } from '@angular/core';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, of, pairwise, startWith, Subject, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, filter, finalize, map, of, pairwise, startWith, Subject, switchMap, tap } from 'rxjs';
 import { ProductFiltersComponent } from '../components/product-filters.component';
 import { ProductListComponent } from '../components/product-list.component';
 import { ProductService } from '../product.service';
@@ -66,7 +66,7 @@ export class ProductsPageComponent {
         startWith({category: null, sort: null}),
         pairwise(),
         switchMap(([prev, filters]) => {
-        //console.log(" prev: " + JSON.parse(prev));
+        console.log(" prev: " + filters);
         this.loading.set(true);
         this.error.set(null);
         // persist to URL
