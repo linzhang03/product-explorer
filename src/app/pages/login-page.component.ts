@@ -22,6 +22,6 @@ export class LoginPageComponent {
 
   login(): void {
     this.auth.loginAsAdmin();
-    this.router.navigateByUrl('/admin');
+  this.router.navigateByUrl('/products');
   }
 }

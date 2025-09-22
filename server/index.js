@@ -216,4 +216,10 @@ app.delete('/cart/:productId', (req, res) => {
 	res.json(cartSummary());
 });
 
+// Test utility: reset cart state
+app.post('/cart/reset', (_req, res) => {
+	CART = [];
+	res.json(cartSummary());
+});
+
 app.listen(PORT, () => console.log(`API listening on http://localhost:${PORT}`));
